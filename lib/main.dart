@@ -1,27 +1,35 @@
 import 'package:flutter/material.dart';
 
-List<Widget> myList = [
-  new Text("data"),
-  new Divider(),
-  new Text("data"),
-  new Divider(),
-  new Text("data"),
-  new Divider(),
-  new Text("data"),
-  new Divider(),
-  new Text("data"),
-  new Divider(),
-  new Text("data"),
-  new Divider(),
-  new Text("data"),
-  new Divider(),
-];
+class MyBody extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => MyBodyState();
+}
+
+class MyBodyState extends State<MyBody>{
+  List<String> _array = [];
+  Widget build(BuildContext context) {
+    return ListView.builder(itemBuilder: (context, i) {
+      print('num $i : notchet = {$i.isOdd}');
+
+      if (i.isOdd) return new Divider();
+
+      final int index = i ~/2;
+
+      if (index >= _array.length) {
+        print("index $index");
+        print("lenght ${_array.length}");
+        _array.addAll(['$index + 1', '$index + 2', '$index + 3']);
+      }
+
+      return new ListTile(title: new Text(_array[index]));
+      }
+    );
+  }
+}
 
 void main() => runApp(
   new MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: new Scaffold(
-      body: new ListView(children: myList),
-    ),
+    home: new Scaffold(body: new Center(child: new MyBody()))
   )
 );
