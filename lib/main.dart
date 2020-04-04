@@ -1,60 +1,32 @@
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
 
 void main() => runApp(
 new MaterialApp(
-  home: Scaffold(body: MyApp()),
+  home: Scaffold(body: TestHttp()),
 )
 );
 
-class MyApp extends StatefulWidget {
+class TestHttp extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => MyAppState();
+  State<StatefulWidget> createState() => TestHttpState();
 }
 
-class MyAppState extends State {
-  SandGlass clock = SandGlass();
-
-  @override
-  void initState () {
-    super.initState();
-
-    clock.tick();
-  }
-
-  _reDrawWidget()async{
-    if (clock.time() == 0) return;
-    await new Future.delayed(Duration(seconds: 1));
-    setState(() {
-    print('_reDrawWidget()');
-  });
-  }
-
+class TestHttpState extends State {
   @override
   Widget build(BuildContext context) {
-    _reDrawWidget();
-    return Center(child: Text("time is ${clock.time()}"));
-  }
-}
+    return Scaffold(
+      appBar: AppBar(title: Text('Lesson of hhtp requests')),
+      body: Center(child: FlatButton(onPressed: (){
+        http.get('https://json.flutter.su/echo').then((responce){
+          print("Response status: ${responce.statusCode}");
+          print("Response body: ${responce.body}");
+        }).catchError((error) {
+          print("Error: $error");
+        }
+        );
 
-class SandGlass {
-  int _sand = 0;
-
-  time(){
-    return _sand;
-  }
-
-  tick() async {
-    _sand = 100;
-    print('start tick');
-
-    while(_sand >0){
-      print('tick: $_sand');
-      _sand--;
-
-      await new Future.delayed(Duration(milliseconds: 100));
-    }
-    
-    print('end tick');
+      }, child: Text("HTTP"))),
+    );
   }
 }
